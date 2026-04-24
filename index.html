@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login / Signup</title>
+</head>
+<body style="text-align:center;margin-top:100px;">
+
+<h2 id="title">Login</h2>
+
+<input id="username" placeholder="Username"><br><br>
+<input id="password" type="password" placeholder="Password"><br><br>
+
+<button onclick="submitForm()">Submit</button>
+
+<p onclick="toggle()" style="color:blue;cursor:pointer;">
+    Switch to Signup
+</p>
+
+<p id="msg"></p>
+
+<script>
+let isLogin = true;
+
+function toggle() {
+    isLogin = !isLogin;
+    document.getElementById("title").innerText = isLogin ? "Login" : "Signup";
+}
+
+async function submitForm() {
+    const username = document.getElementById("username").value;
+    const password = document.getElementById("password").value;
+
+    if (!username || !password) {
+        document.getElementById("msg").innerText = "Enter all fields";
+        return;
+    }
+
+    const url = isLogin ? "/login" : "/signup";
+
+    const res = await fetch(url, {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({username, password})
+    });
+
+    const data = await res.json();
+
+    if (res.status === 200) {
+        window.location.href = "/login-success";
+    } else if (res.status === 201) {
+        window.location.href = "/signup-success";
+    } else {
+        document.getElementById("msg").innerText = data.message;
+    }
+}
+</script>
+
+</body>
+</html>
