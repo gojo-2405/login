@@ -3,8 +3,8 @@ set -e
 
 # 🔧 Variables (edit these)
 CLUSTER="samplecluster"
-SERVICE_NAME="login-service"
-TASK_FAMILY="login-service"
+SERVICE_NAME="login-app-task"
+TASK_FAMILY="login-app-task"
 JSON_FILE="task-def"   # without .json
 IMAGE_VERSION=${BUILD_NUMBER}
 
