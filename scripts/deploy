@@ -1,0 +1,44 @@
+#!/bin/bash
+set -e
+
+# 🔧 Variables (edit these)
+CLUSTER="samplecluster"
+SERVICE_NAME="login-service"
+TASK_FAMILY="login-service"
+JSON_FILE="task-def"   # without .json
+IMAGE_VERSION=${BUILD_NUMBER}
+
+echo "📄 Preparing new task definition..."
+
+# Replace image tag in JSON
+sed -e "s;IMAGE_TAG;${IMAGE_VERSION};g" ${JSON_FILE}.json > ${JSON_FILE}-${BUILD_NUMBER}.json
+
+cat ${JSON_FILE}-${BUILD_NUMBER}.json
+
+echo "📦 Registering new task definition..."
+
+aws ecs register-task-definition \
+--family ${TASK_FAMILY} \
+--cli-input-json file://${JSON_FILE}-${BUILD_NUMBER}.json \
+--region eu-north-1
+
+echo "🚀 Updating ECS service..."
+
+aws ecs update-service \
+--cluster ${CLUSTER} \
+--service ${SERVICE_NAME} \
+--task-definition ${TASK_FAMILY} \
+--force-new-deployment \
+--region eu-north-1
+
+echo "⏳ Waiting for service to stabilize..."
+
+aws ecs wait services-stable \
+--cluster ${CLUSTER} \
+--services ${SERVICE_NAME} \
+--region us-east-1
+
+echo "✅ Deployment successful"
+
+# 🧹 Cleanup
+rm -f ${JSON_FILE}-${BUILD_NUMBER}.json
