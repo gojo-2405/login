@@ -1,0 +1,20 @@
+{
+  "family": "login-app-task",
+  "networkMode": "bridge",
+  "requiresCompatibilities": ["EC2"],
+  "cpu": "256",
+  "memory": "512",
+  "containerDefinitions": [
+    {
+      "name": "login-app",
+      "image": "463367046625.dkr.ecr.eu-north-1.amazonaws.com/aws/website:IMAGE_TAG",
+      "essential": true,
+      "portMappings": [
+        {
+          "containerPort": 5000,
+          "hostPort": 5000
+        }
+      ]
+    }
+  ]
+}
