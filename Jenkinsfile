@@ -6,20 +6,14 @@ pipeline {
   stages {
 
     stage('build') {
-  steps {
-    withCredentials([usernamePassword(
-        credentialsId: 'aws-creds',
-        usernameVariable: 'AWS_ACCESS_KEY_ID',
-        passwordVariable: 'AWS_SECRET_ACCESS_KEY'
-    )]) {
-      sh '''
-      sed -i "s/\\r$//" ./scripts/build
-      chmod +x ./scripts/build
-      ./scripts/build
-      '''
+      steps {
+        sh '''
+        sed -i "s/\\r$//" ./scripts/build
+        chmod +x ./scripts/build
+        ./scripts/build
+        '''
+      }
     }
-  }
-}
 
     stage('deploy') {
       steps {
