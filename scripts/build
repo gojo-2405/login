@@ -3,14 +3,15 @@
 set -e  # exit immediately if any command fails
 
 ECR_REPO=463367046625.dkr.ecr.eu-north-1.amazonaws.com/aws/website
+REGISTRY=463367046625.dkr.ecr.eu-north-1.amazonaws.com
 DOCKER_BUILD_TAG=${GIT_BRANCH}-${BUILD_NUMBER}
 
 echo "🔨 Building Docker image..."
 docker build -t $ECR_REPO:$DOCKER_BUILD_TAG --pull=true .
 
 echo "🔐 Logging into ECR..."
-aws ecr get-login-password --region eu-north-1 | \
-docker login --username AWS --password-stdin 463367046625.dkr.ecr.eu-north-1.amazonaws.com/aws/website
+aws ecr get-login-password --region eu-north-1 --profile demo | \
+docker login --username AWS --password-stdin $REGISTRY
 
 echo "🏷 Tagging image as latest..."
 docker tag $ECR_REPO:$DOCKER_BUILD_TAG $ECR_REPO:latest
@@ -21,4 +22,4 @@ docker push $ECR_REPO:latest
 
 echo "✅ Docker build and push successful"
 
-docker logout
+docker logout $REGISTRY
