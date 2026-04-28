@@ -10,7 +10,7 @@ echo "🔨 Building Docker image..."
 docker build -t $ECR_REPO:$DOCKER_BUILD_TAG --pull=true .
 
 echo "🔐 Logging into ECR..."
-aws ecr get-login-password --region eu-north-1 --profile demo | \
+aws ecr get-login-password --region eu-north-1 --profile test | \
 docker login --username AWS --password-stdin $REGISTRY
 
 echo "🏷 Tagging image as latest..."
