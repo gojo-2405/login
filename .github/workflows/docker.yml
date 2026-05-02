@@ -30,7 +30,7 @@ jobs:
         run: |
           docker logs test-container
 
-      - name: Stop containe
+      - name: Stop container
         run: |
           docker stop test-container
           docker rm test-container
